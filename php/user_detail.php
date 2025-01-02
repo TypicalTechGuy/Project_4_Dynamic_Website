@@ -5,7 +5,7 @@ if (isset($_SESSION['user_id'])) {
   $user_id = null;
 }
 
-$sql = "SELECT user_id, first_name, last_name, email, bio FROM users WHERE user_id = ?";
+$sql = "SELECT user_id, first_name, last_name, email, bio, role FROM users WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -17,4 +17,5 @@ $first_name = $user['first_name'] ?? '';
 $last_name = $user['last_name'] ?? '';
 $email = $user['email'] ?? '';
 $bio = $user['bio'] ?? '';
+$role = $user['role'] ?? '';
 ?>

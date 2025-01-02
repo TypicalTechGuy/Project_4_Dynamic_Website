@@ -1,0 +1,42 @@
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid #dee2e6;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: bold;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.card {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.card-header {
+  background-color: #007bff;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #007bff;
+  border-radius: 8px 8px 0 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.25rem;
+}

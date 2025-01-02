@@ -113,7 +113,7 @@ $total_pages = ceil($total_articles / $articles_per_page);
         </li>
       </ul>
 
-      <form class="d-flex w-10" action="search_results.php" method="GET">
+      <form class="d-flex w-10" action="SearchResult.php" method="GET">
         <input
           class="form-control"
           type="search"
@@ -136,6 +136,9 @@ $total_pages = ceil($total_articles / $articles_per_page);
           <?php echo htmlspecialchars($first_name); ?> <?php echo htmlspecialchars($last_name); ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li><a class="dropdown-item" href="adminPage.php">Admin Dashboard</a></li>
+            <?php endif; ?>
             <li><a class="dropdown-item" href="profilepages/profile.php">View Profile</a></li>
             <li><a class="dropdown-item" href="profilepages/settings.php">Settings</a></li>
             <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
