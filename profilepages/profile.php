@@ -99,56 +99,56 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="../css/profile.css">
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="../HomePage.php">
-          <img
-            src="../img/GamingCorner.png"
-            alt="logo"
-            class="navbar-logo"
-            style="width: 120px"
-          />
-        </a>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="HomePage.php">
+      <img
+        src="img/GamingCorner.png"
+        alt="logo"
+        class="navbar-logo"
+        style="width: 120px"
+      />
+    </a>
 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="../HomePage.php?category=Console">Console</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../HomePage.php?category=PC">PC</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../HomePage.php?category=Retro">Retro</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../HomePage.php?category=Arcade">Arcade</a>
-          </li>
-          </ul>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=Console">Console</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=PC">PC</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=Retro">Retro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=Arcade">Arcade</a>
+        </li>
+      </ul>
 
-          <form class="d-flex">
-            <input
-              class="form-control"
-              type="search"
-              placeholder="Search..."
-              aria-label="Search"
-            />
-          </form>
+      <form class="d-flex w-10" action="SearchResult.php" method="GET">
+        <input
+          class="form-control"
+          type="search"
+          name="query"
+          placeholder="Search..."
+          aria-label="Search"
+        />
+      </form>
 
-
-          <?php if (isset($_SESSION['user_id'])): ?>
+      <?php if (isset($_SESSION['user_id'])): ?>
         <div class="dropdown ms-3">
           <a
             class="btn btn-secondary dropdown-toggle"
@@ -158,11 +158,14 @@ $result = $stmt->get_result();
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <?php echo htmlspecialchars($loggedInFirstName); ?> <?php echo htmlspecialchars($loggedInLastName); ?>
+          <?php echo htmlspecialchars($first_name); ?> <?php echo htmlspecialchars($last_name); ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li><a class="dropdown-item" href="adminPage.php">Admin Dashboard</a></li>
+            <?php endif; ?>
             <li><a class="dropdown-item" href="profilepages/profile.php">View Profile</a></li>
-            <li><a class="dropdown-item" href="profilepages/settings.php">Settings</a></li>
+            <li><a class="dropdown-item" href="articleupload.php">Upload Article</a></li>
             <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
           </ul>
         </div>
@@ -173,7 +176,6 @@ $result = $stmt->get_result();
           </div>
         <?php endif; ?>
      </div>
-      </div>
     </nav>
     
     <section class="profile-container container mt-4" style="max-width: 1400px; max-height: 700px;">
@@ -248,7 +250,10 @@ $result = $stmt->get_result();
                                 <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                 <td>
                                     <a href="../editarticle.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
-                                    <a href="delete_article.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this article?');">Delete</a>
+                                    <form action="../php/delete_article.php" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this article?');">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endwhile; ?>

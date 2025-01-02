@@ -1,5 +1,7 @@
 <?php
+include("php/session_handler.php");
 include("php/db_connect.php");
+include("php/user_detail.php");
 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 $items_per_page = 4;
@@ -131,8 +133,10 @@ if (!empty($search_query)) {
           <?php echo htmlspecialchars($first_name); ?> <?php echo htmlspecialchars($last_name); ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li><a class="dropdown-item" href="adminPage.php">Admin Dashboard</a></li>
+            <?php endif; ?>
             <li><a class="dropdown-item" href="profilepages/profile.php">View Profile</a></li>
-            <li><a class="dropdown-item" href="profilepages/settings.php">Settings</a></li>
             <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
           </ul>
         </div>

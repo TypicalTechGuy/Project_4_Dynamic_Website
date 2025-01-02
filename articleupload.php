@@ -60,7 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   );
 
   if ($stmt->execute()) {
-      echo "Article uploaded successfully.";
+    $_SESSION['upload_success'] = true;
+    header("Location: articleupload.php");
+    exit();
   } else {
       echo "Error: " . $stmt->error;
   }
@@ -92,69 +94,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="HomePage.php">
-          <img
-            src="img/GamingCorner.png"
-            alt="logo"
-            class="navbar-logo"
-            style="width: 120px"
-          />
-        </a>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="HomePage.php">
+      <img
+        src="img/GamingCorner.png"
+        alt="logo"
+        class="navbar-logo"
+        style="width: 120px"
+      />
+    </a>
 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="pages/TrendingPage.php">Trending</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/ConsolePage.php">Console</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/PCPage.php">PC</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/RetroPage.php">Retro</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/ArcadePage.php">Arcade</a>
-            </li>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=Console">Console</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=PC">PC</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=Retro">Retro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="HomePage.php?category=Arcade">Arcade</a>
+        </li>
+      </ul>
+
+      <form class="d-flex w-10" action="SearchResult.php" method="GET">
+        <input
+          class="form-control"
+          type="search"
+          name="query"
+          placeholder="Search..."
+          aria-label="Search"
+        />
+      </form>
+
+      <?php if (isset($_SESSION['user_id'])): ?>
+        <div class="dropdown ms-3">
+          <a
+            class="btn btn-secondary dropdown-toggle"
+            href="#"
+            role="button"
+            id="userDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+          <?php echo htmlspecialchars($first_name); ?> <?php echo htmlspecialchars($last_name); ?>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+              <li><a class="dropdown-item" href="adminPage.php">Admin Dashboard</a></li>
+            <?php endif; ?>
+            <li><a class="dropdown-item" href="profilepages/profile.php">View Profile</a></li>
+            <li><a class="dropdown-item" href="articleupload.php">Upload Article</a></li>
+            <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
           </ul>
-
-          <form class="d-flex">
-            <input
-              class="form-control"
-              type="search"
-              placeholder="Search..."
-              aria-label="Search"
-            />
-          </form>
-
-
-          <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="profilepages/profile.php" class="ms-3">
-              <h5><?php echo htmlspecialchars($first_name) . ' ' . htmlspecialchars($last_name); ?></h5>
-            </a>
-          <?php else: ?>
-            <a href="profilepages/sign_in.php" class="ms-3"><h5>Sign In</h5></a>
-            <a href="profilepages/register.php" class="ms-3"><h5>Register</h5></a>
-          <?php endif; ?>
-
-
         </div>
-      </div>
+        <?php else: ?>
+          <div class="d-flex align-items-center">
+            <a href="profilepages/sign_in.php" class="btn btn-outline-primary me-2">Sign In</a>
+            <a href="profilepages/register.php" class="btn btn-primary">Register</a>
+          </div>
+        <?php endif; ?>
+     </div>
     </nav>
 
     <div class="container mt-5">
@@ -191,14 +206,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endforeach; ?>
        </select>
     </div>
-    <div class="mb-3">
-        <label for="status" class="form-label">Status:</label>
-        <select class="form-select" id="status" name="status" required>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="archived">Archived</option>
-        </select>
-    </div>
     <button type="submit" class="btn btn-primary">Submit Article</button>
 </form>
 </div>
@@ -220,5 +227,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"
       ></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if (isset($_SESSION['upload_success'])): ?>
+                alert('Article uploaded successfully!');
+                <?php unset($_SESSION['upload_success']); ?>
+            <?php endif; ?>
+        });
+    </script>
 </body>
 </html>

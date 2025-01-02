@@ -28,7 +28,7 @@ if ($category) {
     $result = $conn->query($total_articles_query);
     $total_articles = $result->fetch_assoc()['total'];
 
-    $query = "SELECT id, title, content, image_url, category, published_date FROM articles LIMIT $offset, $articles_per_page";
+    $query = "SELECT id, title, content, image_url, category, published_date FROM articles ORDER BY published_date DESC LIMIT $offset, $articles_per_page";
     $stmt = $conn->prepare($query);
 }
 
@@ -140,7 +140,7 @@ $total_pages = ceil($total_articles / $articles_per_page);
               <li><a class="dropdown-item" href="adminPage.php">Admin Dashboard</a></li>
             <?php endif; ?>
             <li><a class="dropdown-item" href="profilepages/profile.php">View Profile</a></li>
-            <li><a class="dropdown-item" href="profilepages/settings.php">Settings</a></li>
+            <li><a class="dropdown-item" href="articleupload.php">Upload Article</a></li>
             <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
           </ul>
         </div>
